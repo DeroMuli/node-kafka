@@ -10,9 +10,27 @@ const { Kafka } = require('kafkajs');
   
   // Initialize the Kafka producer and consumer
   const producer = kafka.producer();
+  const consumer = kafka.consumer({ groupId: 'test-group' })
 
   await producer.connect();
   console.log("Connected to producer.");
+  await consumer.connect()
+  console.log("consumer connected")
+
+
+  await consumer.subscribe({ topic: 'demoTopic', fromBeginning: true });
+  console.log("Consumer subscribed to topic = demoTopic");
+
+  // Log every message consumed
+  await consumer.run({
+    eachMessage: async ({ topic, partition, message }) => {
+      
+      console.log(
+        'Consumed a message = ',
+        { topic, partition, value: message.value.toString() }
+      )
+    },
+  });
   
   // Send an event to the demoTopic topic
   await producer.send({
