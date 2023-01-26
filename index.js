@@ -1,4 +1,10 @@
 const express = require('express');
+const { Kafka } = require('kafkajs')
+
+const kafka = new Kafka({
+  clientId: 'kafka-nodejs-starter',
+  brokers: ['kafka1:9092'],
+});
 
 const app = express();
 
